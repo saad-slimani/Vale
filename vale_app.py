@@ -1,6 +1,6 @@
 import streamlit as st
 import torch
-from transformers import AutoModelForVisionEncoderDecoder, AutoFeatureExtractor, PreTrainedTokenizerFast
+from transformers import AutoModel, AutoFeatureExtractor, PreTrainedTokenizerFast
 from PIL import Image
 import pydicom
 import numpy as np
@@ -12,8 +12,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Load CXRMate-Single-TF model, tokenizer, and feature extractor
 model_name = "aehrc/cxrmate-single-tf"
 try:
-    # Use a model class that supports vision-to-text generation
-    model = AutoModelForVisionEncoderDecoder.from_pretrained(model_name, trust_remote_code=True).to(device)
+    # Use AutoModel for general use cases
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True).to(device)
     model.eval()
     tokenizer = PreTrainedTokenizerFast.from_pretrained(model_name)
     feature_extractor = AutoFeatureExtractor.from_pretrained(model_name)
@@ -52,9 +52,9 @@ def preprocess_image(image):
 # Function to generate the report using CXRMate-Single-TF
 def generate_report(preprocessed_image):
     try:
-        # Generate the report using pixel values
+        # Generate the report using the model
         outputs = model.generate(
-            pixel_values=preprocessed_image,
+            pixel_values=preprocessed_image,  # Pass preprocessed image tensor
             max_length=256,                  # Limit maximum length for concise reports
             num_beams=4,                     # Use beam search for better results
             use_cache=False                  # Disable cache to avoid 'past_key_values' issues
