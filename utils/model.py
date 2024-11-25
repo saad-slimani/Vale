@@ -10,18 +10,19 @@ tokenizer = PreTrainedTokenizerFast.from_pretrained(model_name)
 
 def generate_report(image_tensor):
     try:
+        # Convert the preprocessed image into input IDs
+        input_ids = tokenizer.encode("Report:", return_tensors="pt").to(device)
+
+        # Generate the report
         outputs = model.generate(
-            pixel_values=image_tensor,
-            special_token_ids=[tokenizer.sep_token_id],
-            bos_token_id=tokenizer.bos_token_id,
-            eos_token_id=tokenizer.eos_token_id,
-            pad_token_id=tokenizer.pad_token_id,
-            return_dict_in_generate=True,
-            use_cache=True,
-            max_length=256,
-            num_beams=4
+            input_ids=input_ids,               # Use tokenized input IDs
+            max_length=256,                   # Set maximum output length
+            num_beams=4,                      # Use beam search for better results
+            use_cache=True                    # Enable cache for efficiency
         )
-        # Decode the generated report
-        return tokenizer.decode(outputs.sequences[0], skip_special_tokens=True)
+
+        # Decode the generated sequence into text
+        decoded_report = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return decoded_report
     except Exception as e:
         raise ValueError(f"Error generating report: {e}")
