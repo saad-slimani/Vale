@@ -7,7 +7,7 @@ import openai  # OpenAI integration
 import os  # For accessing environment variables
 
 # Load OpenAI API key securely from environment variables
-api_key = os.getenv("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")
+api_key = os.getenv("you_open_AI_key")
 if not api_key:
     st.error("OpenAI API key not found. Please set the 'OPENAI_API_KEY' environment variable.")
 else:
