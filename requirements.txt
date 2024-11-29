@@ -2,7 +2,7 @@ streamlit
 torch
 torchvision
 numpy
-transformers==4.45.2
+transformers
 pillow
 pydicom
 matplotlib
