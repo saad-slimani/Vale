@@ -59,7 +59,7 @@ def generate_report(image_tensor):
             pad_token_id=tokenizer.pad_token_id,         # Padding token
             return_dict_in_generate=True,
             use_cache=True,
-            max_length=256,  # Limit maximum length for concise reports
+            max_length=2000, 
             num_beams=4      # Use beam search for better results
         )
 
